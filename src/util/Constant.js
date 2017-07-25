@@ -1,0 +1,76 @@
+export const WebChatConst = {
+    //导航栏名称
+    menuHistoryCon:'MENU_HISTORY_CON',
+    menuFlightGroup:'MENU_FLIGHT_GROUP',
+    menuGroundService:'MENU_GROUND_SERVICE',
+    menuNotice:'MENU_NOTICE',
+    menuUserGroup:'MENU_USER_GROUP',
+    menuContact:'MENU_CONTACT',
+    menuHistoryGroup:'MENU_HISTORY_GROUP',
+    menuManager:'MENU_MANAGER',
+
+    //localStorage用户信息和导航栏变量名称
+    webChatUserInfo:'WEB_CHAT_USER_INFO',
+    webChatBarOrder:'WEB_CHAT_BAR_ORDER',
+    webChatForbidGroup:'WEB_CHAT_FORBID_GROUP',
+    webChatSendMsgWay:'WEB_CHAT_SEND_MSG_WAY',
+
+    BarOrderList:[
+        {
+            class:'history-con-icon',
+            text:'最近联系人'
+        },
+        {
+            class:'flight-group-icon',
+            text:'航班群'
+        },
+        {
+            class:'ground-group-icon',
+            text:'地服群'
+        },
+        {
+            class:'history-group-icon',
+            text:'历史群'
+        },
+        {
+            class:'user-group-icon',
+            text:'用户群'
+        },
+        {
+            class:'contact-icon',
+            text:'通讯录'
+        },
+
+        {
+            class:'notice-icon',
+            text:'提醒'
+        },
+    ],
+    //聊天窗口装载页面名称
+    framePlaceHolder:'FRAME_PLACE_HOLDER',
+    frameChatBody:'FRAME_CHAT_BODY',
+    frameProfile:'FRAME_PROFILE',
+
+    //接口返回错误码
+    'ERROR.CODE.450':'无效的请求{0}',
+    'ERROR.CODE.100':'系统异常',
+    'ERROR.CODE.101':'请求外部接口{0}错误',
+    'ERROR.CODE.102':'参数校验未通过',
+    'ERROR.CODE.103':'登录账号不能为空',
+    'ERROR.CODE.104':'登录密码不能为空',
+    'ERROR.CODE.105':'外部接口返回错误',
+    'ERROR.CODE.106':'系统内部错误，未找到路由服务',
+    'ERROR.CODE.107':'没有权限访问',
+    'ERROR.CODE.108':'登录信息验证失败!',
+    'ERROR.CODE.109':'上传文件失败',
+    'ERROR.CODE.110':'身份信息已失效，请重新登录',
+    'ERROR.CODE.111':'登录账号和密码不能为空！',
+    'ERROR.CODE.113':'你所在的部门暂未开通权限',
+    'ERROR.CODE.147':'{0}长度不能超过{1}',
+
+    flightGroupType:0,
+    userGroupType:1,
+    groundGroupType:2,
+    //每一页的聊天消息数
+    chatMsgNumPerPage:20
+};

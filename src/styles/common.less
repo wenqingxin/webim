@@ -1,0 +1,70 @@
+@common_margin_top: 160px;
+@common_blue: #316db6;
+@common_border_color: #e9e9e9;
+.clearfix {
+  &:after {
+    content: ""; /**//*内容为“.”就是一个英文的句号而已。也可以不写。*/
+    display: block; /**//*加入的这个元素转换为块级元素。*/
+    clear: both; /**//*清除左右两边浮动。*/
+    visibility: hidden; /**//*可见度设为隐藏。注意它和display:none;是有区别的。visibility:hidden;仍然占据空间，只是看不到而已；*/
+    line-height: 0; /**//*行高为0；*/
+    height: 0; /**//*高度为0；*/
+    font-size: 0; /**//*字体大小为0；*/
+  }
+
+}
+
+.text-ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.box-shadow {
+  //box-shadow: 0 0 55px #dcdcdc;
+  box-shadow: 0 0 10px 0 #b1b1b1;
+}
+
+.float-l {
+  float: left;
+}
+
+.float-r {
+  float: left;
+}
+
+.on-hand {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s cubic-bezier(.55, 0, .1, 1);
+}
+
+.fade-enter, .fade-leave-active {
+  //transform: translateX(-100%);
+  opacity: 0;
+}
+.loading(@top,@left){
+  background: url(../images/loading.png) center no-repeat;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  position: absolute;
+  left: @left;
+  top: @top;
+  animation: run-circle 1s linear infinite;
+}
+
+@keyframes run-circle {
+  from{
+    transform:rotate(0deg)
+  }
+  to{
+    transform:rotate(360deg)
+
+  }
+}

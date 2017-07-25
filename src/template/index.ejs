@@ -1,13 +1,20 @@
+<%= '<'+'%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%'+'>'%>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>iView project</title>
+    <title>Web聊天系统</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[0] %>">
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[1] %>">
 </head>
-<body>
+
+<body oncontextmenu="return false">
     <div id="app"></div>
+    <script type="text/javascript" src="<%= webpackConfig.output.publicPath+'config.js'%>"></script>
+    <script type="text/javascript" src="<%= webpackConfig.output.publicPath+'plupload.js'%>"></script>
+    <script type="text/javascript" src="<%= webpackConfig.output.publicPath+'qiniu.js'%>"></script>
+    <script type="text/javascript" src="<%= webpackConfig.output.publicPath+'RongIMLib.js'%>"></script>
     <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[0] %>"></script>
     <script type="text/javascript" src="<%= htmlWebpackPlugin.files.js[1] %>"></script>
 </body>

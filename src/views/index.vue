@@ -1,88 +1,168 @@
+<!-- 主view 加载页面所有组件 -->
 <template>
-    <div class="chat" id="chat" >
-        <chat-aside class="aside-box"></chat-aside>
-        <div class="chat-list" :class="{'chat-list-hide':!isSwipeOut}">
-            <router-view ></router-view>
+    <transition name="fade">
+        <div id="index" class="clearfix" :class="{maximize:maximize}" v-show="!minimizeOps.show" >
+
+            <!-- 页面主体 -->
+            <left-bar class="float-l"></left-bar>
+            <middle-box class="float-l"></middle-box>
+            <right-window class="float-l"></right-window>
+            <!-- 弹出层 -->
+            <Contact-layer class="contact-layer" v-if="contactLayer.show"></Contact-layer>
+            <Bar-manager-layer class="manager-layer"></Bar-manager-layer>
+            <Profile-layer class="profile-layer"></Profile-layer>
+            <Mask-layer></Mask-layer>
+            <Group-message-box class="group-message-box"></Group-message-box>
+            <Message-box class="message-box" is-input="true"></Message-box>
+            <Image-viewer></Image-viewer>
+            <Context-menu v-show="contextMenu.show"></Context-menu>
+
         </div>
-        <chat-body class="chat-body" :class="{'chat-body-long':!longChatBody}">
-        </chat-body>
-    </div>
+    </transition>
+
 </template>
 <script>
-    import chatAside from './chatside/chatAside.vue'
-    import chatBody from './chatbody/chatBody.vue'
-    import store from '../../store/store';
+    import leftBar from './child/leftBar.vue'
+    import middleBox from './child/middleBox.vue'
+    import rightWindow from './child/rightWindow.vue'
+    import ContactLayer from '../components/ContactLayer.vue'
+    import MaskLayer from '../components/MaskLayer.vue'
+    import BarManagerLayer from '../components/BarManagerLayer.vue'
+    import ProfileLayer from '../components/ProfileLayer.vue'
+    import GroupMessageBox from '../components/common/GroupMessageBox.vue'
+    import MessageBox from '../components/common/MessageBox.vue'
+    import ContextMenu from '../components/ContextMenu.vue'
+    import ImageViewer from '../components/common/ImageViewer.vue'
+    import {mapState} from 'vuex'
+    import {mapActions} from 'vuex'
+    import {mapMutations} from 'vuex'
+    import {mapGetters} from 'vuex'
+    import {getLocalUserArr} from '../util/Utils.js'
+    import {WebChatConst} from '../util/Constant.js'
+    import SpringLib from '../libs/SpringLib.js'
+    import {Service,dataAccess} from '../util/Utils.js'
+    import {uploadFile} from '../util/RongUpload.js'
 
     export default {
-        data(){
-            return {
-            }
+        name:'index',
+        methods: {
+            ...mapActions(['initRong','queryGroupList','getQiuNiuFileToken','getDiscussName']),
+            ...mapMutations(['showUpdatingContact','showConnectInfo','showAsideBar','setUpdateContact']),
         },
-        created(){
-
-        },
-        components:{
-            chatAside,
-            chatBody
+        mounted(){
+            //初始化融云
+            this.$nextTick(function () {
+                if (this.userInfo.token){
+                    this.initRong().then(()=>{
+                        this.queryGroupList();//拉取加入的群组
+                        console.log('开始拉取通讯录...');
+                        SpringLib.DBUtil.init(this.userInfo.staffId) &&
+                        dataAccess.getContactsFromRemote().then( ()=> {
+                                console.log('同步通讯录成功');
+                                this.setUpdateContact(true);
+                                this.showConnectInfo({show:true,msg:'通讯录更新成功',loading:false});
+                                setTimeout(()=>{
+                                    this.getDiscussName();
+                                },100)
+                        }).catch(err=> {
+                            if (err == -1) {
+                                    //有其他进程在更新通讯录
+                                    this.showConnectInfo({show:true,msg:'通讯录已在更新中',loading:true});
+                                } else {
+                                    console.log('更新通讯录出错',err);
+                                    this.showConnectInfo({show:true,msg:'更新通讯录出错',loading:false});
+                                }
+                                this.setUpdateContact(true);
+                                setTimeout(()=>{
+                                    this.getDiscussName();
+                                },100)
+                        });
+                    });
+                }
+            });
         },
         computed: {
-            isSwipeOut(){
-                return store.state.chat.isSwipeOut;
-            },
-            longChatBody(){
-                return store.state.chat.longChatBody;
-            }
+            ...mapState(['minimizeOps','userInfo','contactLayer','contextMenu','maximize']),
+            //...mapGetters(['getHistoryCon'])
+        },
+        components: {
+            leftBar,
+            middleBox,
+            rightWindow,
+            ContactLayer,
+            MaskLayer,
+            BarManagerLayer,
+            ProfileLayer,
+            GroupMessageBox,
+            MessageBox,
+            ContextMenu,
+            ImageViewer
+
         }
     }
 </script>
-<style scoped lang="less">
-    .item1 {
-        height: 10px;
-        background-color: red;
+<style lang="less" scoped>
+    @import "../styles/common.less";
+    .maximize{
+        width: 100% !important;
+        height: 100% !important;
+         top: 0 !important;
+         left: 0 !important;
+         margin-top: 0 !important;
+         margin-left:0 !important;
     }
+    #index {
+        width: 900px;
+        height: 600px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -300px;
+        margin-left: -450px;
 
-    .item2 {
-        height: 10px;
-        background-color: green;
-    }
-
-    .item3 {
-        height: 10px;
-        background-color: blue;
-    }
-
-    .chat {
-        height: 100%;
-        position: relative;
-        @aside_bar_width: 70px;
-        @chat_list_width: 314px;
-        .aside-box{
-            width: @aside_bar_width;
-            background-color: #753a88;
+        .layer() {
             position: absolute;
-            height: 100%;
-            z-index:999;
+            top: 50%;
+            left: 50%;
+            z-index: 30;
         }
-        .chat-list-hide{
-            transform:translateX(-@chat_list_width)!important;
+        .contact-layer {
+            .layer();
+            margin-left: -300px;
+            margin-top: -235px;
         }
-        .chat-list {
-            width: @chat_list_width;
-            transform:translateX(@aside_bar_width) ;
-            background-color: rgb(244,248,252);
+        .manager-layer {
+            .layer();
+            margin-left: -150px;
+            margin-top: -180px;
+        }
+        .profile-layer {
             position: absolute;
-            height: 100%;
-            transition:transform .15s linear;
+            top: 20px;
+            left: 70px;
+            z-index: 30;
 
         }
-        .chat-body-long{
-            margin-left: @aside_bar_width + @chat_list_width !important;
-        }
-        .chat-body {
-            height: 100%;
-            margin-left: @aside_bar_width;
-            transition:margin-left .15s linear;
-        }
+        .group-message-box {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            margin-left: -175px;
+            border-radius: 5px;
+            z-index: 130;
 
+        }
+        .message-box {
+            position: absolute;
+            top: 200px;
+            left: 50%;
+            margin-left: -175px;
+            border-radius: 5px;
+            z-index: 130;
+
+        }
+        &:hover {
+            cursor: default;
+        }
     }
 </style>
